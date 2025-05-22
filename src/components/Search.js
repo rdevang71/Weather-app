@@ -77,7 +77,7 @@ const Search = () => {
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [locationStatus, setLocationStatus] = useState('');
-  const [userCity, setUserCity] = useState(''); // to store the detected city
+  const [userCity, setUserCity] = useState('');
 
   const navigate = useNavigate();
 
@@ -93,7 +93,6 @@ const Search = () => {
           setLatitude(lat);
           setLongitude(lon);
 
-          // Reverse geocoding to get city name
           try {
             const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lon}&key=YOUR_API_KEY`);
             const data = await response.json();
@@ -141,129 +140,148 @@ const Search = () => {
     }
   };
 
+  
+
   return (
-    <div className="bg-secondary text-light rounded shadow p-4">
-      <h2 className="mb-4"><i className="fas fa-search-location me-2"></i>Search Weather</h2>
-
-      {/* Get Location Button */}
-      <div className="mb-4">
-        <button className="btn btn-outline-light me-2" onClick={getLocation}>
-          <i className="fas fa-location-crosshairs me-2"></i>Get Location
-        </button>
-        {locationStatus && <span className="text-info">{locationStatus}</span>}
-        {userCity && (
-          <div className="mt-2">
-            <strong>Detected City: </strong><span>{userCity}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Search Mode Selection */}
-      <div className="mb-4">
-        <div className="form-check form-check-inline">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="searchMode"
-            id="searchByCity"
-            value="city"
-            checked={searchMode === 'city'}
-            onChange={() => setSearchMode('city')}
-          />
-          <label className="form-check-label" htmlFor="searchByCity">
-            <i className="fas fa-city me-1"></i>By City
-          </label>
+     <div
+    className="d-flex justify-content-center align-items-center"
+    style={{
+      minHeight: 'calc(100vh - 56px)', // Adjust if your navbar height is different
+      background: 'linear-gradient(to bottom right, #0f2027, #203a43, #2c5364)',
+      padding: 0,
+      margin: 0,
+    }}
+  >
+    <div
+      className="p-4 rounded shadow"
+      style={{
+        backgroundColor: '#1e1e1e',
+        color: '#fff',
+        width: '100%',
+        maxWidth: '700px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+      }}
+    >
+        <div className="text-center mb-5">
+          <h1 className="display-5 fw-bold text-light">
+            <i className="fas fa-cloud-sun-rain me-2"></i>Weather Lookup
+          </h1>
+          <p className="text-white-50 fs-5">Search weather by city name or geographic coordinates</p>
         </div>
-        <div className="form-check form-check-inline">
-          <input
-            className="form-check-input"
-            type="radio"
-            name="searchMode"
-            id="searchByCoords"
-            value="coords"
-            checked={searchMode === 'coords'}
-            onChange={() => setSearchMode('coords')}
-          />
-          <label className="form-check-label" htmlFor="searchByCoords">
-            <i className="fas fa-globe me-1"></i>By Coordinates
-          </label>
-        </div>
-      </div>
 
-      {/* Conditional Rendering */}
-      {searchMode === 'city' ? (
-        <div className="mb-3 position-relative">
-          <label className="form-label">Enter City Name</label>
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="E.g., Delhi"
-              value={city}
-              onChange={handleCityChange}
-            />
-            <button className="btn btn-outline-light" onClick={handleCitySearch}>
-              <i className="fas fa-search me-1"></i>Search
+        <div className="bg-dark text-white rounded-4 shadow-lg p-4 p-md-5">
+          {/* Location Section */}
+          <div className="mb-4 border-bottom pb-3">
+            <h4 className="mb-3"><i className="fas fa-crosshairs me-2 text-info"></i>Get Your Current Location</h4>
+            <button className="btn btn-outline-info me-3" onClick={getLocation}>
+              <i className="fas fa-location-arrow me-2"></i>Detect My Location
             </button>
+            {locationStatus && <span className="text-warning">{locationStatus}</span>}
+            {userCity && (
+              <div className="mt-2 alert alert-success bg-opacity-25 border-0">
+                <strong>Detected City: </strong> {userCity}
+              </div>
+            )}
           </div>
-          {/* Suggestions Dropdown */}
-          {suggestions.length > 0 && (
-            <ul className="list-group position-absolute w-100 z-3" style={{ maxHeight: '200px', overflowY: 'auto' }}>
-              {suggestions.map((suggestedCity, index) => (
-                <li
-                  key={index}
-                  className="list-group-item list-group-item-action"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => handleSuggestionClick(suggestedCity)}
-                >
-                  {suggestedCity}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      ) : (
-        <div className="mb-3">
-          <label className="form-label">Enter Coordinates</label>
-          <div className="row g-2">
-            <div className="col-md-6">
+
+          {/* Search Mode Switch */}
+          <div className="mb-4 border-bottom pb-3">
+            <h4><i className="fas fa-sliders-h me-2 text-info"></i>Choose Search Method</h4>
+            <div className="form-check form-check-inline">
               <input
-                type="number"
-                step="any"
-                className="form-control"
-                placeholder="Latitude"
-                value={latitude}
-                onChange={(e) => setLatitude(e.target.value)}
+                className="form-check-input"
+                type="radio"
+                name="searchMode"
+                id="searchByCity"
+                value="city"
+                checked={searchMode === 'city'}
+                onChange={() => setSearchMode('city')}
               />
+              <label className="form-check-label" htmlFor="searchByCity">By City</label>
             </div>
-            <div className="col-md-6">
+            <div className="form-check form-check-inline">
               <input
-                type="number"
-                step="any"
-                className="form-control"
-                placeholder="Longitude"
-                value={longitude}
-                onChange={(e) => setLongitude(e.target.value)}
+                className="form-check-input"
+                type="radio"
+                name="searchMode"
+                id="searchByCoords"
+                value="coords"
+                checked={searchMode === 'coords'}
+                onChange={() => setSearchMode('coords')}
               />
+              <label className="form-check-label" htmlFor="searchByCoords">By Coordinates</label>
             </div>
           </div>
-          {latitude && longitude ? (
-            <button 
-              className="btn btn-primary mt-3"
-              onClick={() => navigate(`/weather?lat=${latitude}&lon=${longitude}`)}
-            >
-              <i className="fas fa-search-location me-1"></i>Search Weather for This Location
-            </button>
+
+          {/* Conditional Rendering */}
+          {searchMode === 'city' ? (
+            <div className="mb-3 position-relative">
+              <label className="form-label fs-5">Enter City Name</label>
+              <div className="input-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="e.g., Jaipur"
+                  value={city}
+                  onChange={handleCityChange}
+                />
+                <button className="btn btn-info text-white" onClick={handleCitySearch}>
+                  <i className="fas fa-search me-1"></i>Search
+                </button>
+              </div>
+              {suggestions.length > 0 && (
+                <ul className="list-group position-absolute w-100 mt-1 z-3" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+                  {suggestions.map((suggestedCity, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item list-group-item-action"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleSuggestionClick(suggestedCity)}
+                    >
+                      {suggestedCity}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           ) : (
-            <button className="btn btn-outline-light mt-3" disabled>
-              <i className="fas fa-search-location me-1"></i>Search
-            </button>
+            <div className="mb-3">
+              <label className="form-label fs-5">Enter Latitude and Longitude</label>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="Latitude"
+                    value={latitude}
+                    onChange={(e) => setLatitude(e.target.value)}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <input
+                    type="number"
+                    step="any"
+                    className="form-control"
+                    placeholder="Longitude"
+                    value={longitude}
+                    onChange={(e) => setLongitude(e.target.value)}
+                  />
+                </div>
+              </div>
+              <button
+                className={`btn mt-3 ${latitude && longitude ? 'btn-success' : 'btn-outline-secondary'}`}
+                onClick={() => navigate(`/weather?lat=${latitude}&lon=${longitude}`)}
+                disabled={!latitude || !longitude}
+              >
+                <i className="fas fa-map-marker-alt me-1"></i>Search by Coordinates
+              </button>
+            </div>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
 export default Search;
-

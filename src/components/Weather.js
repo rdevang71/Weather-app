@@ -138,11 +138,25 @@ const Weather = () => {
     }
   }, [latitude, longitude, city]);
 
+     const keyframes = `
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+`; 
+const gradientStyle = {
+  background: 'linear-gradient(-45deg, #0f2027, #203a43, #2c5364)',
+  backgroundSize: '400% 400%',
+  animation: 'gradientMove 15s ease infinite',
+  minHeight: "100vh",
+  padding: "20px"
+};
   return (
     <div
       style={{
         backgroundColor: "#f8f9fa", // Light background color (Bootstrap's light gray)
-        backgroundImage: "linear-gradient(to bottom right, #60BFD5)",
+        background: 'linear-gradient(to bottom right, #0f2027, #203a43, #2c5364)',
         minHeight: "100vh",
         padding: "20px",
       }}
@@ -150,7 +164,7 @@ const Weather = () => {
       <div className="container mt-4">
         <div
           className="card shadow-lg p-4 text-dark rounded"
-          style={{ backgroundColor: "#70B4DB" }}
+          style={{ background: 'linear-gradient(to bottom right, #0f2027, #203a43, #2c5364)', }}
         >
           <h2 className="text-center mb-4 text-primary">
             <i className="fas fa-cloud-sun-rain me-2"></i>Weather Forecast
